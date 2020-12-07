@@ -1,0 +1,22 @@
+server:
+  port: 9090
+
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3336/lumen_sjw?characterEncoding=UTF-8&useSSL=true&serverTimezone=PRC&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
+    username: sckr
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss  #时间戳统一转换为指定格式
+    time-zone: Asia/Shanghai
+file:
+  path: E:/myfrist/work/
+  host: localhost
+  port: 3336
+  mysqlPath: D:/phpStudy/PHPTutorial/MySQL/bin/
+  time: 0
+  table: lumen_sjw
+
+
