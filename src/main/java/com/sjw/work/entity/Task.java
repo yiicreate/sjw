@@ -19,5 +19,5 @@ public class Task implements Serializable {
     String path;
 
     @JsonFormat(locale = "zh", timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    Date createTime;
+    Long createTime;
 }

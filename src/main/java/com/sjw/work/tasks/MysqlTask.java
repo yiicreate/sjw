@@ -53,7 +53,8 @@ public class MysqlTask {
             Process exec = runtime.exec((String) res.get("command"));
             Task task = new Task();
             task.setPath((String) res.get("name"));
-            task.setCreateTime(new Date());
+            Long timestamp = System.currentTimeMillis() / 1000;
+            task.setCreateTime(timestamp);
             taskServiceImp.setTaskService(task);
         } catch (IOException e) {
             // TODO Auto-generated catch block
