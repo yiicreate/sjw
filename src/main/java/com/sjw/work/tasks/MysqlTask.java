@@ -36,20 +36,12 @@ public class MysqlTask {
     @Async
     @Scheduled(cron = "0/5 * * * * ?")
     public void first(){
-        Date d = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss ");
-        System.out.println("第一个定时任务执行："+ sdf.format(d)+"===线程："+Thread.currentThread().getName());
-
         Param taskName = paramServiceImp.findName("task","1");
-
         Long timestamp = System.currentTimeMillis() / 1000;
-
         if(timestamp - fileConfig.getTime()>= Integer.parseInt(taskName.getName())){
-            System.out.println("进来了");
             this.saveSql();
             fileConfig.setTime(timestamp);
         }
-
     }
 
     // 实现数据库的导出（方法1）
