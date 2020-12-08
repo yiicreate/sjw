@@ -5,6 +5,7 @@ import com.sjw.work.entity.Param;
 import com.sjw.work.entity.Task;
 import com.sjw.work.service.Imp.ParamServiceImp;
 import com.sjw.work.service.Imp.TaskServiceImp;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
@@ -18,10 +19,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @Configuration
 @EnableScheduling
 @EnableAsync
+@Slf4j
 public class MysqlTask {
 
     @Autowired
@@ -57,6 +60,7 @@ public class MysqlTask {
             task.setCreateTime(timestamp);
             taskServiceImp.setTaskService(task);
         } catch (IOException e) {
+            log.info(e.getMessage());
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
