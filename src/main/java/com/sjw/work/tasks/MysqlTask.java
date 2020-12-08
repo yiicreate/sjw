@@ -13,13 +13,11 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 @Configuration
 @EnableScheduling
@@ -37,7 +35,7 @@ public class MysqlTask {
     private TaskServiceImp taskServiceImp;
 
     @Async
-    @Scheduled(cron = "0/0 * 1 * * ?")
+    @Scheduled(cron = "0 0 0/1 * * ?")
     public void first(){
         Param taskName = paramServiceImp.findName("task","1");
         Long timestamp = System.currentTimeMillis() / 1000;
