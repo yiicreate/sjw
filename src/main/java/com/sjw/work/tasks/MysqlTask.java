@@ -34,7 +34,7 @@ public class MysqlTask {
     private TaskServiceImp taskServiceImp;
 
     @Async
-    @Scheduled(cron = "0/5 * * * * ?")
+    @Scheduled(cron = "0/0 * 1 * * ?")
     public void first(){
         Param taskName = paramServiceImp.findName("task","1");
         Long timestamp = System.currentTimeMillis() / 1000;
