@@ -37,31 +37,39 @@ public class MysqlTask {
     @Async
     @Scheduled(cron = "0 0 0/1 * * ?")
     public void first(){
-        Param taskName = paramServiceImp.findName("task","1");
-        Long timestamp = System.currentTimeMillis() / 1000;
-        if(timestamp - fileConfig.getTime()>= Integer.parseInt(taskName.getName())){
-            this.saveSql();
-            fileConfig.setTime(timestamp);
-        }
+//        Param taskName = paramServiceImp.findName("task","1");
+//        Long timestamp = System.currentTimeMillis() / 1000;
+//        if(timestamp - fileConfig.getTime()>= Integer.parseInt(taskName.getName())){
+//            this.saveSql();
+//            fileConfig.setTime(timestamp);
+//        }
     }
 
     // 实现数据库的导出（方法1）
     public  void saveSql() {
-        Runtime runtime = Runtime.getRuntime();
-        Map res = getExportCommand();
-        // 这里其实是在命令窗口中执行的 command 命令行
-        try {
-            Process exec = runtime.exec((String) res.get("command"));
-            Task task = new Task();
-            task.setPath((String) res.get("name"));
-            Long timestamp = System.currentTimeMillis() / 1000;
-            task.setCreateTime(timestamp);
-            taskServiceImp.setTaskService(task);
-        } catch (IOException e) {
-            log.info(e.getMessage());
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        do{
+            System.out.println("进入"+System.currentTimeMillis()/1000);
+            Param taskName = paramServiceImp.findName("task","1");
+            if(Integer.parseInt(taskName.getName()) != 1){
+                break;
+            }
+            System.out.println("执行任务"+System.currentTimeMillis()/1000);
+            Runtime runtime = Runtime.getRuntime();
+            Map res = getExportCommand();
+            // 这里其实是在命令窗口中执行的 command 命令行
+            try {
+                Process exec = runtime.exec((String) res.get("command"));
+                Task task = new Task();
+                task.setPath((String) res.get("name"));
+                Long timestamp = System.currentTimeMillis() / 1000;
+                task.setCreateTime(timestamp);
+                taskServiceImp.setTaskService(task);
+            } catch (IOException e) {
+                log.info(e.getMessage());
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }while (false);
     }
 
     // 得到导出数据的命令行语句
