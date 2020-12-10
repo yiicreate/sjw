@@ -12,9 +12,11 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import java.util.Map;
 @Configuration
 @EnableScheduling
 @EnableAsync
+//@Service
 @Slf4j
 public class MysqlTask {
 
@@ -35,25 +38,48 @@ public class MysqlTask {
     private TaskServiceImp taskServiceImp;
 
     @Async
-    @Scheduled(cron = "0 0 0/1 * * ?")
+    @Scheduled(cron = "0 0/1 * * * *")
     public void first(){
-//        Param taskName = paramServiceImp.findName("task","1");
-//        Long timestamp = System.currentTimeMillis() / 1000;
-//        if(timestamp - fileConfig.getTime()>= Integer.parseInt(taskName.getName())){
-//            this.saveSql();
-//            fileConfig.setTime(timestamp);
-//        }
+        Param taskName = paramServiceImp.findName("task","2");
+        Calendar now = Calendar.getInstance();
+        String str = taskName.getName();
+        String[] arr = str.split(" ");
+        do{
+            Integer day = now.get(Calendar.DAY_OF_MONTH);
+            Integer week = now.get(Calendar.WEEK_OF_MONTH);
+            Boolean bool = false;
+            if(!arr[4].equals("*") && week == Integer.parseInt(arr[4])){
+                bool = true;
+            }else if(!arr[3].equals("*") && day == Integer.parseInt(arr[3])){
+                bool = true;
+            }else if (arr[4].equals("*") && arr[3].equals("*")){
+                bool = true;
+            }
+
+            if(!bool){
+                break;
+            }
+            Integer hour = now.get(Calendar.HOUR_OF_DAY);
+            if(!arr[2].equals("*") && hour != Integer.parseInt(arr[2])){
+                break;
+            }
+            Integer min = now.get(Calendar.MINUTE);
+            if(min != Integer.parseInt(arr[1])){
+                break;
+            }
+            saveSql();
+        }while (false);
     }
 
     // 实现数据库的导出（方法1）
     public  void saveSql() {
         do{
-            System.out.println("进入"+System.currentTimeMillis()/1000);
+
             Param taskName = paramServiceImp.findName("task","1");
             if(Integer.parseInt(taskName.getName()) != 1){
                 break;
             }
-            System.out.println("执行任务"+System.currentTimeMillis()/1000);
+            log.info("执行任务"+System.currentTimeMillis()/1000);
             Runtime runtime = Runtime.getRuntime();
             Map res = getExportCommand();
             // 这里其实是在命令窗口中执行的 command 命令行
@@ -64,6 +90,7 @@ public class MysqlTask {
                 Long timestamp = System.currentTimeMillis() / 1000;
                 task.setCreateTime(timestamp);
                 taskServiceImp.setTaskService(task);
+                log.info("执行任务1"+System.currentTimeMillis()/1000);
             } catch (IOException e) {
                 log.info(e.getMessage());
                 // TODO Auto-generated catch block
