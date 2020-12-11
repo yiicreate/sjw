@@ -79,7 +79,6 @@ public class MysqlTask {
             if(Integer.parseInt(taskName.getName()) != 1){
                 break;
             }
-            log.info("执行任务"+System.currentTimeMillis()/1000);
             Runtime runtime = Runtime.getRuntime();
             Map res = getExportCommand();
             // 这里其实是在命令窗口中执行的 command 命令行
@@ -90,7 +89,7 @@ public class MysqlTask {
                 Long timestamp = System.currentTimeMillis() / 1000;
                 task.setCreateTime(timestamp);
                 taskServiceImp.setTaskService(task);
-                log.info("执行任务1"+System.currentTimeMillis()/1000);
+                log.info("执行任务"+System.currentTimeMillis()/1000);
             } catch (IOException e) {
                 log.info(e.getMessage());
                 // TODO Auto-generated catch block
@@ -110,14 +109,15 @@ public class MysqlTask {
         String port = fileConfig.getPort();// 端口号
         String path = fileConfig.getPath();
         String MysqlPath = fileConfig.getMysqlPath(); //路径是mysql中
-        String exportDatabaseName = fileConfig.getTable();// 导入的目标数据库的名称
+        String table = fileConfig.getTable();// 导入的目标数据库的名称
 
         StringBuffer command = new StringBuffer();
         String exportPath = path+name;// 导入的目标文件所在的位置
 
         // 注意哪些地方要空格，哪些不要空格
         command.append(MysqlPath).append("mysqldump -u").append(username).append(" -p").append(password)// 密码是用的小p，而端口是用的大P。
-                .append(" -h").append(host).append(" -P").append(port).append(" ").append(exportDatabaseName)
+                .append(" -h").append(host).append(" -P").append(port).append(" ").append(" --ignore-table="+table+".lumen_task ")
+                .append(" --ignore-table="+table+".lumen_param ").append(table)
                 .append(" -r ").append(exportPath);
         Map<String,String> map=  new HashMap<>();
         map.put("command",command.toString());
